@@ -15,24 +15,46 @@ function List() {
     console.log(todos);
   };
 
+  const removeTodo = (todoToRemove) => {
+    const updatedTodos = todos.filter((todo) => {
+      return todo !== todoToRemove;
+    });
+
+    setTodos(updatedTodos);
+  };
+
   return (
-    <div className="todo">
-      <form>
-        <input type="text" value={newTodo} onChange={handleChange} />
-        <button type="submit" onClick={addTodo}>
+    <div className="input-form">
+      <form className="flex">
+        <input
+          className="border w-screen"
+          type="text"
+          value={newTodo}
+          onChange={handleChange}
+        />
+        <button
+          className="border rounded-md p-3 ml-2 w-32 bg-orange-500 text-white border-orange-600"
+          type="submit"
+          onClick={addTodo}
+        >
           Add Todo
         </button>
       </form>
-      <ul>
+      <div>
         {todos.map((todo, index) => {
           return (
-            <li key={index}>
+            <div key={index}>
               <span>{todo}</span>
-              <button>Delete</button>
-            </li>
+              <button
+                onClick={() => removeTodo(todo)}
+                className="border rounded-md px-3 ml-2 bg-black text-white"
+              >
+                Delete
+              </button>
+            </div>
           );
         })}
-      </ul>
+      </div>
     </div>
   );
 }
