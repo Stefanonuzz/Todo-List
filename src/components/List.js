@@ -25,7 +25,8 @@ function List() {
 
   return (
     <div className="input-form">
-      <form className="flex">
+      <span className="flex py-4">Numero di Task: {todos.length}</span>
+      <form className="flex mb-4">
         <input
           className="border w-screen"
           type="text"
@@ -33,7 +34,7 @@ function List() {
           onChange={handleChange}
         />
         <button
-          className="border rounded-md p-3 ml-2 w-32 bg-orange-500 text-white border-orange-600"
+          className="border rounded-md p-3 w-40 bg-orange-500 text-white border-orange-600"
           type="submit"
           onClick={addTodo}
         >
@@ -43,11 +44,19 @@ function List() {
       <div>
         {todos.map((todo, index) => {
           return (
-            <div key={index}>
-              <span>{todo}</span>
+            <div
+              className="w-100 bg-slate-50 flex justify-between text-l font-medium border-b content-center"
+              key={index}
+            >
+              <div className="flex items-center">
+                <input type="checkbox" />
+                <span id="todo" className="text-left ml-2">
+                  {todo}
+                </span>
+              </div>
               <button
                 onClick={() => removeTodo(todo)}
-                className="border rounded-md px-3 ml-2 bg-black text-white"
+                className="border rounded-md px-7 py-2 ml-2 bg-black text-white"
               >
                 Delete
               </button>
