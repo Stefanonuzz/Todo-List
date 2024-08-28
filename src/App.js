@@ -1,5 +1,4 @@
 import List from "./components/List";
-import Nav from "./components/Nav";
 
 function App() {
   return (
