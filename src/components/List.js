@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { HiOutlineTrash } from "react-icons/hi";
-import { HiOutlinePencilAlt } from "react-icons/hi";
+import ColumnChart from "./ColumnChart";
+import InputForm from "./InputForm";
+import { HiOutlineTrash, HiOutlinePencilAlt } from "react-icons/hi";
 
 function List() {
   const [todos, setTodos] = useState([]);
@@ -27,7 +28,6 @@ function List() {
     const updatedTodos = todos.filter((todo) => {
       return todo.id !== todoToRemove.id;
     });
-
     setTodos(updatedTodos);
   };
 
@@ -48,70 +48,83 @@ function List() {
     setEditTodoText("");
   };
 
+  const handleIsCompleted = (id) => {
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, isCompleted: !todo.isCompleted };
+      }
+      return todo;
+    });
+    setTodos(updatedTodos);
+  };
+
+  const completedTodosCount = todos.filter((todo) => todo.isCompleted).length;
+  const todosCount = todos.filter((todo) => todo.isCompleted === false).length;
+
   return (
-    <div className="input-form">
-      <span className="flex py-4">Numero di Task: {todos.length}</span>
-      <form className="flex mb-4">
-        <input
-          className="border w-screen"
-          type="text"
-          value={newTodo}
-          onChange={handleChange}
+    <div className="grid grid-cols-2">
+      <div className="input-form">
+        <InputForm
+          newTodo={newTodo}
+          handleChange={handleChange}
+          addTodo={addTodo}
         />
-        <button
-          className="border rounded-md p-3 w-40 bg-orange-500 text-white border-orange-600"
-          type="submit"
-          onClick={addTodo}
-        >
-          Add Todo
-        </button>
-      </form>
-      <div>
-        {todos.map((todo, index) => {
-          return (
-            <div
-              className="w-100 bg-slate-50 flex justify-between text-l font-medium border-b content-center"
-              key={index}
-            >
-              <div className="flex items-center ml-2">
-                <input type="checkbox" />
-                {editTodoId === todo.id ? (
+        <div>
+          {todos.map((todo, index) => {
+            return (
+              <div
+                className="w-100 bg-slate-50 flex justify-between text-l font-medium border-b content-center"
+                key={index}
+              >
+                <div className="flex items-center ml-2">
                   <input
-                    className="border w-full ml-2"
-                    type="text"
-                    value={editTodoText}
-                    onChange={(e) => setEditTodoText(e.target.value)}
+                    type="checkbox"
+                    onClick={() => handleIsCompleted(todo.id)}
                   />
+                  {editTodoId === todo.id ? (
+                    <input
+                      className="border w-full ml-2"
+                      type="text"
+                      value={editTodoText}
+                      onChange={(e) => setEditTodoText(e.target.value)}
+                    />
+                  ) : (
+                    <span className="text-left ml-2">{todo.text}</span>
+                  )}
+                </div>
+
+                {editTodoId === todo.id ? (
+                  <button
+                    onClick={() => saveTodo(todo.id)}
+                    className="border rounded-md px-7 py-2 ml-2 bg-green-500 text-white"
+                  >
+                    Save
+                  </button>
                 ) : (
-                  <span className="text-left ml-2">{todo.text}</span>
+                  <>
+                    <div>
+                      <button onClick={() => handleEdit(todo)} className="px-7">
+                        <HiOutlinePencilAlt />
+                      </button>
+                      <button
+                        onClick={() => removeTodo(todo)}
+                        className="px-2 py-4 mx-2"
+                      >
+                        <HiOutlineTrash />
+                      </button>
+                    </div>
+                  </>
                 )}
               </div>
-
-              {editTodoId === todo.id ? (
-                <button
-                  onClick={() => saveTodo(todo.id)}
-                  className="border rounded-md px-7 py-2 ml-2 bg-green-500 text-white"
-                >
-                  Save
-                </button>
-              ) : (
-                <>
-                  <div>
-                    <button onClick={() => handleEdit(todo)} className="px-7">
-                      <HiOutlinePencilAlt />
-                    </button>
-                    <button
-                      onClick={() => removeTodo(todo)}
-                      className="px-2 py-4 mx-2"
-                    >
-                      <HiOutlineTrash />
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
+      </div>
+      <div className="col-start-2 w-100">
+        <ColumnChart
+          completedTodosCount={completedTodosCount}
+          todosCount={todosCount}
+        />
       </div>
     </div>
   );
